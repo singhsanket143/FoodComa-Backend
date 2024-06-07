@@ -38,5 +38,5 @@ app.listen(ServerConfig.PORT, async () => {
     // console.log(newUser);
 });
 
-// localhost:5500/users - POST
+// localhost:5500/users - GET
 // localhost:5500/carts/736876235 -GET
