@@ -2,6 +2,8 @@ const express = require('express');
 
 const ServerConfig = require('./config/serverConfig');
 const connectDB = require('./config/dbConfig');
+const userRouter = require('./routes/userRoute');
+const cartRouter = require('./routes/cartRoute');
 // const User = require('./schema/userSchema');
 
 const app = express();
@@ -9,6 +11,11 @@ const app = express();
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
+
+// Routing middleware
+// if your req route starts with /users then handle it using userRouter
+app.use('/users', userRouter); // connects the router to the server
+app.use('/carts', cartRouter);
 
 app.post('/ping', (req, res) => {
     console.log(req.body);
@@ -30,3 +37,6 @@ app.listen(ServerConfig.PORT, async () => {
     // console.log("Created new user");
     // console.log(newUser);
 });
+
+// localhost:5500/users - POST
+// localhost:5500/carts/736876235 -GET
