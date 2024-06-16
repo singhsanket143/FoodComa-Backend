@@ -42,6 +42,7 @@ async function getProductById(productId) {
     }
     return response;
 }
+
 async function deleteProductById(productId) {
     const response = await ProductRespository.deleteProductById(productId);
     if(!response) {
