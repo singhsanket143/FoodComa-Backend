@@ -10,6 +10,7 @@ async function addProduct(req, res) {
             category: req.body.category, // if category is undefined, veg will be stored
             inStock: req.body.inStock // if inStock is undefined then true will be stored
         });
+        console.log("Back to controller", product);
         return res.status(201).json({
             success: true,
             message: 'Successfully created the product',
