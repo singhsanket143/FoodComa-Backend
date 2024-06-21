@@ -9,43 +9,55 @@ async function createProduct(productDetails) {
     // cloudinary
 
     const imagePath = productDetails.imagePath;
-    if(imagePath) {
+    if (imagePath) {
         try {
             const cloudinaryResponse = await cloudinary.uploader.upload(imagePath);
-            var productImage = cloudinaryResponse.secure_url;
-            console.log(productImage);
-            await fs.unlink(process.cwd() + "/" + imagePath);
-        } catch(error) {
+            productDetails.productImage= cloudinaryResponse.secure_url;
+            // console.log(productImage);
+            await fs.unlink(imagePath);
+        } catch (error) {
             console.log(error);
             throw new InternalServerError();
         }
-        
+
     }
 
     // 2. Then use the url from cloudinary and other propduct details to add product in db
-    const product = await ProductRespository.createProduct({
-        ...productDetails,
-        productImage: productImage
-    });
+    const product = await ProductRespository.createProduct(productDetails);
 
     console.log(product);
-        
+
     return product;
-    
+
 
 }
 
 async function getProductById(productId) {
     const response = await ProductRespository.getProductById(productId);
-    if(!response) {
+    if (!response) {
         throw new NotFoundError('Product');
     }
     return response;
 }
 
 async function deleteProductById(productId) {
+    const product = await ProductRespository.getProductById(productId);
+    if (!product) {
+        throw new NotFoundError('Product');
+    }
+    const imageUrl = product.productImage;
+    if (imageUrl) {
+        try {
+            const splitUrl = imageUrl.split('/');
+            const publicId = splitUrl[splitUrl.length - 1].split('.')[0];
+            await cloudinary.uploader.destroy(publicId);
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError();
+        }
+    }
     const response = await ProductRespository.deleteProductById(productId);
-    if(!response) {
+    if (!response) {
         throw new NotFoundError('Product');
     }
     return response;
