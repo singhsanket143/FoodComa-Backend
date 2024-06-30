@@ -1,4 +1,4 @@
-const { COOKIE_SECURE } = require("../config/serverConfig");
+const { COOKIE_SECURE, FRONTEND_URL } = require("../config/serverConfig");
 const { loginUser } = require("../services/authService");
 
 
